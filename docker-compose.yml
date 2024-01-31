@@ -5,7 +5,7 @@ services:
     links:
       - db
     ports:
-      - "80:3000"
+      - "8085:3000"
     volumes:
       - app-data:/apps/public/images
  
@@ -29,7 +29,7 @@ services:
     image: "phpmyadmin"
     restart: always
     ports:
-      - "8000:80"
+      - "8084:80"
  
  
 volumes:
