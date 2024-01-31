@@ -5,12 +5,12 @@ services:
     links:
       - db
     ports:
-      - "8085:3000"
+      - "80:3000"
     volumes:
       - app-data:/apps/public/images
-
+ 
   db:
-    image: mariadb
+    image: "mariadb"
     restart: always
     links:
       - phpmyadmin
@@ -24,13 +24,14 @@ services:
     volumes:
       - ./apps/database/:/docker-entrypoint-initdb.d
       - db-data:/var/lib/mysql
-
+ 
   phpmyadmin:
-    image: phpmyadmin
+    image: "phpmyadmin"
     restart: always
     ports:
-      - "8084:80"
-
+      - "8000:80"
+ 
+ 
 volumes:
   app-data:
   db-data:
