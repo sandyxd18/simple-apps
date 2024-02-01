@@ -1,0 +1,51 @@
+pipeline {
+    agent {
+        label 'devops1-sandy'
+    }
+    tools {
+        nodejs 'nodejs18'
+    }
+
+    stages {
+        stage('Checkout SCM') {
+            steps {
+                git branch: 'main', url: 'https://github.com/sandyxd18/simple-apps.git'
+            }
+        }
+        stage('Build code') {
+            steps {
+                sh '''cd apps/
+                npm install'''
+            }
+        }
+        stage('Testing code') {
+            steps {
+                sh '''cd apps/
+                npm install
+                npm run test:coverage'''
+            }
+        }
+        stage('Review code') {
+            steps {
+                sh '''cd apps/
+                sonar-scanner \\  
+                -Dsonar.projectKey=simple-apps \\  
+                -Dsonar.sources=. \\  
+                -Dsonar.host.url=http://172.23.11.15:9000 \\  
+                -Dsonar.login=sqp_79496197715de9ca3eb8b947babf64830143911f'''
+            }
+        }
+        stage('Change file env') {
+            steps {
+                sh '''cd apps/
+                sed -i \'s/localhost/db/g\' .env'''
+            }
+        }
+        stage('Deploy compose') {
+            steps {
+                sh '''docker compose build
+                docker compose up -d'''
+            }
+        }
+    }
+}
